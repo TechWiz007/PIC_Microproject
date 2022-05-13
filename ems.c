@@ -1,247 +1,274 @@
-// Include header files
+// C program for the above approach
 #include <stdio.h>
-#include <conio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <windows.h>
 
-// Structure for details of the employee
-struct employees
-
-{
-    char name[50];
-    float ctc;
-    int age;
-    int rc_no; 
+// Structure of the employee
+struct emp {
+	char name[50];
+	float salary;
+	int age;
+	int id;
 };
 struct emp e;
 
-// Size of the structure
+// size of the structure
 long int size = sizeof(e);
 
-// Start from origin
-COORD cord = { 0,0 }
+// In the start coordinates
+// will be 0, 0
+COORD cord = { 0, 0 };
 
-// Function to get co-ordinates
+// function to set the
+// coordinates
 void gotoxy(int x, int y)
 {
-    cord.X = x;
-    cord.Y = y;
-    SetConsoleCursorPosition(
-        GetStdHandle(STD_OUTPUT_HANDLE),
-        cord);
+	cord.X = x;
+	cord.Y = y;
+	SetConsoleCursorPosition(
+		GetStdHandle(STD_OUTPUT_HANDLE),
+		cord);
 }
-  
+
 FILE *fp, *ft;
 
-// Function to add information of employees
-void addinfo()
+// Function to add the records
+void addrecord()
 {
-    system("cls");
-    fseek(fp, 0, SEEK_END);
-    char another = 'y';
+	system("cls");
+	fseek(fp, 0, SEEK_END);
+	char another = 'y';
 
-    while (another == y)
-    {
-        printf("Name of the Employee: ");
-        scanf("%c\n," &e.name);
+	while (another == 'y') {
+		printf("\nEnter Name : ");
+		scanf("%s", e.name);
 
-        printf("CTC of the Employee (IN LPA): ");
-        scanf("%f\n", &.ctc);
+		printf("\nEnter Age : ");
+		scanf("%d", &e.age);
 
-        printf("Age of the Employee: ")
-        scanf("%d\n" &e.age)
+		printf("\nEnter Salary : ");
+		scanf("%f", &e.salary);
 
-        printf("Recruitment Number of the Employee: ")
-        scanf("%d\n", &e.rc_no)
+		printf("\nEnter EMP-ID : ");
+		scanf("%d", &e.id);
 
-        fwrite(&e, size, 1, fp);
+		fwrite(&e, size, 1, fp);
 
-        printf("Do you want to add more information? (Yes/No)")
-        
-        fflush(stdin);
-  
-        scanf("%c", &another);
-    }
+		printf("\nWant to add another"
+			" record (Y/N) : ");
+		fflush(stdin);
+
+		scanf("%c", &another);
+	}
 }
 
-// Function to delete information of employees
-void deleteinfo()
+// Function to delete the records
+void deleterecord()
 {
-    system("cls");
-    char empname[50];
-    char another = 'y';
+	system("cls");
+	char empname[50];
+	char another = 'y';
 
-    while (another == y)
-    {
-        printf("Name of the Employee: ")
-        scanf("%c\n", &e.empname)
+	while (another == 'y') {
+		printf("\nEnter employee "
+			"name to delete : ");
+		scanf("%s", empname);
 
-        ft = fopen("temp.txt", "wb");
-        rewind(fp);
-  
-        while (fread(&e, size,
-                     1, fp)
-               == 1) {
-            if (strcmp(e.name,
-                       empname)
-                != 0)
-                fwrite(&e, size, 1, ft);
-        }
-  
-        fclose(fp);
-        fclose(ft);
-        remove("data.txt");
-        rename("temp.txt", "data.txt");
-        fp = fopen("data.txt", "rb+");
+		ft = fopen("temp.txt", "wb");
+		rewind(fp);
 
-        printf("Do you want to delete more records? (Yes/No)")
-        fflush(stdin);
-        another = getche();
-    }
+		while (fread(&e, size,
+					1, fp)
+			== 1) {
+			if (strcmp(e.name,
+					empname)
+				!= 0)
+				fwrite(&e, size, 1, ft);
+		}
+
+		fclose(fp);
+		fclose(ft);
+		remove("data.txt");
+		rename("temp.txt", "data.txt");
+		fp = fopen("data.txt", "rb+");
+
+		printf("\nWant to delete another"
+			" record (Y/N) :");
+		fflush(stdin);
+		another = getche();
+	}
 }
 
-// Function to display information of the employees
-void dispinfo()
+// Function to display the record
+void displayrecord()
 {
-    system("cls");
+	system("cls");
 
-    rewind(fp);
+	// sets pointer to start
+	// of the file
+	rewind(fp);
 
-    printf("\n==========================================================");
-    printf("\nNAME\t\tCTC (IN LPA)\t\tAGE\t\tRECRUITMENT NO.\n",e.name, e.ctc, e.age, e.rc_no);
-    printf("==========================================================\n");
-     while (fread(&e, size, 1, fp) == 1)
-        printf("\n%c\t\t%f\t\t%.2d\t%10d", e.name, e.ctc, e.age, e.rc_no);
-  
-    printf("\n\n\n\t");
-    system("pause");
+	printf("\n========================="
+		"==========================="
+		"======");
+	printf("\nNAME\t\tAGE\t\tSALARY\t\t"
+		"\tID\n",
+		e.name, e.age,
+		e.salary, e.id);
+	printf("==========================="
+		"==========================="
+		"====\n");
+
+	while (fread(&e, size, 1, fp) == 1)
+		printf("\n%s\t\t%d\t\t%.2f\t%10d",
+			e.name, e.age, e.salary, e.id);
+
+	printf("\n\n\n\t");
+	system("pause");
 }
 
-// Function to modify the information of the employee
- void modinfo()
- {
-    system("cls");
-    char empname[50];
-    char another = 'y';
-  
-    while (another == 'y') {
-        printf("Enter name of the employee to modify: ");
-        scanf("%s\n", empname);
+// Function to modify the record
+void modifyrecord()
+{
+	system("cls");
+	char empname[50];
+	char another = 'y';
 
-        rewind(fp);
+	while (another == 'y') {
+		printf("\nEnter employee name"
+			" to modify : ");
+		scanf("%s", empname);
 
-        while (fread(&e, size, 1, fp) == 1)
-        {
+		rewind(fp);
 
-            if (strcmp(e.name, empname) == 0)
-            {
-                printf("\nEnter new name:");
-                scanf("%s", e.name);
-                printf("\nEnter new CTC (in LPA)");
-                scanf("%d", &e.ctc);
-                printf("\nEnter new age:");
-                scanf("%f", &e.age);
-                printf("\nEnter new recruitment number:");
-                scanf("%d", &e.rc_no);
-  
-                fseek(fp, -size, SEEK_CUR);
-                fwrite(&e, size, 1, fp);
-                break;
-            }
-        }
-    
-        printf("\nWant to modify more information? (Yes/No");
-        fflush(stdin);
-        scanf("%c", &another);
-    }
+		// While File is open
+		while (fread(&e, size, 1, fp) == 1) {
+			// Compare the employee name
+			// with ename
+			if (strcmp(e.name, empname) == 0) {
+				printf("\nEnter new name:");
+				scanf("%s", e.name);
+				printf("\nEnter new age :");
+				scanf("%d", &e.age);
+				printf("\nEnter new salary :");
+				scanf("%f", &e.salary);
+				printf("\nEnter new EMP-ID :");
+				scanf("%d", &e.id);
+
+				fseek(fp, -size, SEEK_CUR);
+				fwrite(&e, size, 1, fp);
+				break;
+			}
+		}
+
+		// Ask for modifying another record
+		printf("\nWant to modify another"
+			" record (Y/N) :");
+		fflush(stdin);
+		scanf("%c", &another);
+	}
 }
 
 // Driver code
 int main()
 {
-    int choice;
-  
-    // opening the file
-    fp = fopen("data.txt", "rb+");
-  
-    // showing error if file is unable to open.
-    if (fp == NULL) {
-        fp = fopen("data.txt", "wb+");
-        if (fp == NULL) {
-            printf("\nCannot open file...");
-            exit(1);
-        }
-    }
-  
-    system("Color 3F");
-    printf("\n\n\n\n\t\t\t\t=====================================================");
-    printf("\n\t\t\t\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-    printf("\n\t\t\t\t=====================================================");
-    printf("\n\t\t\t\t[|:::>:::>:::>::>EMPLOYEE RECORD<::<:::<:::<:::|]\t");
-    printf("\n\t\t\t\t=====================================================");
-    printf("\n\t\t\t\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-    printf("\n\t\t\t\t===================================================\n");
-    printf("\n\n\n\t\t\t\t\t\t\t\t\t\tDeveloper: TechWiz007\n\n\t\t\t\t");
-  
-    system("pause");
+	int choice;
 
-    while (1)
-    {
-        // Clearing console and asking the user for input
-        system("cls");
-        gotoxy(30, 10);
-        printf("\n1. ADD INFORMATIOn\n");
-        gotoxy(30, 12);
-        printf("\n2. DELETE INFORMATION\n");
-        gotoxy(30, 14);
-        printf("\n3. DISPLAY INFORMATION\n");
-        gotoxy(30, 16);
-        printf("\n4. MODIFY INFORMATION\n");
-        gotoxy(30, 18);
-        printf("\n5. EXIT\n");
-        gotoxy(30, 20);
-        printf("\nENTER YOUR CHOICE...\n");
-        fflush(stdin);
-        scanf("%d", &choice);
+	// opening the file
+	fp = fopen("data.txt", "rb+");
 
-        // Switch Case
-        switch (choice) {
-        case 1:
-  
-            // Add information
-            addinfo();
-            break;
-  
-        case 2:
-  
-            // Delete information
-            deleteinfo();
-            break;
-  
-        case 3:
-  
-            // Display information
-            dispinfo();
-            break;
-  
-        case 4:
-  
-            // Modify information
-            modinfo();
-            break;
-  
-        case 5:
+	// showing error if file is
+	// unable to open.
+	if (fp == NULL) {
+		fp = fopen("data.txt", "wb+");
+		if (fp == NULL) {
+			printf("\nCannot open file...");
+			exit(1);
+		}
+	}
 
-            // Exit out
-            fclose(fp);
-            exit(0);
-            break;
-  
-        default:
-            printf("\nINVALID CHOICE...\n");
-        }
-    }
+	system("Color 3F");
+	printf("\n\n\n\n\t\t\t\t============="
+		"============================="
+		"===========");
+	printf("\n\t\t\t\t~~~~~~~~~~~~~~~~~~~"
+		"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+		"~~~~~");
+	printf("\n\t\t\t\t==================="
+		"============================="
+		"=====");
+	printf("\n\t\t\t\t[|:::>:::>:::>::> "
+		"EMPLOYEE RECORD <::<:::<:::"
+		"<:::|]\t");
+	printf("\n\t\t\t\t==================="
+		"============================="
+		"=====");
+	printf("\n\t\t\t\t~~~~~~~~~~~~~~~~~~~~"
+		"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+		"~~~");
+	printf("\n\t\t\t\t====================="
+		"==============================\n");
+	printf("\n\n\n\t\t\t\t\t\t\t\t\t\t"
+		"Developer : @Sushant_Gaurav"
+		"\n\n\t\t\t\t");
 
-return 0;
+	system("pause");
+
+	while (1) {
+		// Clearing console and asking the
+		// user for input
+		system("cls");
+		gotoxy(30, 10);
+		printf("\n1. ADD RECORD\n");
+		gotoxy(30, 12);
+		printf("\n2. DELETE RECORD\n");
+		gotoxy(30, 14);
+		printf("\n3. DISPLAY RECORDS\n");
+		gotoxy(30, 16);
+		printf("\n4. MODIFY RECORD\n");
+		gotoxy(30, 18);
+		printf("\n5. EXIT\n");
+		gotoxy(30, 20);
+		printf("\nENTER YOUR CHOICE...\n");
+		fflush(stdin);
+		scanf("%d", &choice);
+
+		// Switch Case
+		switch (choice) {
+		case 1:
+
+			// Add the records
+			addrecord();
+			break;
+
+		case 2:
+
+			// Delete the records
+			deleterecord();
+			break;
+
+		case 3:
+
+			// Display the records
+			displayrecord();
+			break;
+
+		case 4:
+
+			// Modify the records
+			modifyrecord();
+			break;
+
+		case 5:
+			fclose(fp);
+			exit(0);
+			break;
+
+		default:
+			printf("\nINVALID CHOICE...\n");
+		}
+	}
+
+	return 0;
 }
